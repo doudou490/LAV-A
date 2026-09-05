@@ -1,0 +1,23 @@
+{
+  "sections": {
+    "main": {
+      "type": "product-information",
+      "settings": {
+        "content_width": "content-center-aligned",
+        "desktop_media_position": "left",
+        "equal_columns": false,
+        "limit_details_width": false,
+        "gap": 48,
+        "enable_sticky_add_to_cart": true,
+        "background_color": "",
+        "padding-block-start": 0,
+        "padding-block-end": 0
+      }
+    },
+    "lavea_cod": {
+      "type": "lavea-cod-form",
+      "settings": { "whatsapp_number": "" }
+    }
+  },
+  "order": ["main", "lavea_cod"]
+}
