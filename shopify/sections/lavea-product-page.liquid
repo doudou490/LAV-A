@@ -1,0 +1,52 @@
+{% liquid
+  assign wa = section.settings.whatsapp_number | default: ''
+  assign wan = wa | remove:'+' | remove:' ' | remove:'-' | remove:'(' | remove:')'
+  assign v = product.selected_or_first_available_variant
+%}
+<section id="lvp-{{ section.id }}" class="lvp" dir="rtl" data-wilayas="https://cdn.jsdelivr.net/gh/dzbuild-com/dzship@main/data/wilayas.json" data-communes="https://cdn.jsdelivr.net/gh/dzbuild-com/dzship@main/data/communes.json">
+  <div class="lvp-wrap">
+    <div class="lvp-media">
+      {% if product.featured_image %}<div class="lvp-mainimg"><img src="{{ product.featured_image | image_url: width: 1200 }}" alt="{{ product.title | escape }}"></div>{% endif %}
+      {% if product.images.size > 1 %}<div class="lvp-thumbs">{% for im in product.images limit:6 %}<a href="{{ im | image_url: width: 1200 }}"><img src="{{ im | image_url: width: 180 }}" alt="{{ product.title | escape }}"></a>{% endfor %}</div>{% endif %}
+    </div>
+    <div class="lvp-info">
+      <span class="lvp-k">LAVÉA • TOUCH OF ELEGANCE</span>
+      <h1>{{ product.title }}</h1>
+      <div class="lvp-price">{{ product.price | money_without_trailing_zeros }}</div>
+      <p class="lvp-desc">{{ product.description | strip_html | truncate: 360 }}</p>
+      {% form 'product', product, id:'LVPAdd-' | append:section.id, class:'lvp-cart' %}
+        {% unless product.has_only_default_variant %}<label><b>الاختيار</b><select name="id" class="lvp-input">{% for pv in product.variants %}<option value="{{pv.id}}" {% if pv.id==v.id %}selected{% endif %} {% unless pv.available %}disabled{% endunless %}>{{pv.title}}{% unless pv.available %} — غير متوفر{% endunless %}</option>{% endfor %}</select></label>{% else %}<input type="hidden" name="id" value="{{v.id}}">{% endunless %}
+        <label><b>الكمية</b><input class="lvp-input lvp-qty" name="quantity" type="number" min="1" value="1"></label>
+        <button class="lvp-cart-btn" type="submit" {% unless v.available %}disabled{% endunless %}>{% if v.available %}أضف إلى السلة — {{ product.price | money_without_trailing_zeros }}{% else %}المنتج غير متوفر{% endif %}</button>
+      {% endform %}
+      {% if wan != blank and wan != '0' %}<a class="lvp-wa" target="_blank" rel="noopener" href="https://wa.me/{{wan}}?text={{'سلام، نحب نطلب هدية مخصصة من LAVÉA. المنتج: '|append:product.title|url_encode}}">🎁 صناعة هدية مخصصة عبر WhatsApp</a>{% endif %}
+    </div>
+  </div>
+
+  <div class="lvp-cod-box">
+    <div class="lvp-cod-head"><span>الدفع عند الاستلام • COD</span><h2>اطلب هذا المنتج الآن</h2><p>الاسم + الهاتف + الولاية + البلدية، والباقي علينا.</p></div>
+    <form id="LVPCOD-{{section.id}}" class="lvp-cod-form">
+      <input type="hidden" name="id" value="{{v.id}}">
+      <div class="lvp-grid">
+        <label><b>الاسم واللقب</b><input class="lvp-input" name="name" required autocomplete="name" placeholder="مثال: محمد بن علي"></label>
+        <label><b>رقم الهاتف</b><input class="lvp-input" name="phone" required inputmode="tel" autocomplete="tel" placeholder="05xxxxxxxx"></label>
+        <label><b>الولاية</b><select class="lvp-input js-w" required><option value="">اختر الولاية</option></select></label>
+        <label><b>البلدية</b><select class="lvp-input js-c" required disabled><option value="">اختر الولاية أولا</option></select></label>
+        <label><b>التغليف</b><select class="lvp-input" name="wrap"><option value="بدون تغليف">بدون تغليف</option><option value="تغليف هدية بسيط">تغليف هدية بسيط</option></select></label>
+        <label class="full"><b>الملاحظة</b><textarea class="lvp-input" name="note" rows="3" placeholder="ملاحظة للطلب أو وقت الاتصال..."></textarea></label>
+      </div>
+      <div class="lvp-total"><strong>{{product.title}}</strong><b>{{product.price|money_without_trailing_zeros}}</b></div>
+      <button class="lvp-cod-btn" type="submit">تأكيد الطلب • الدفع عند الاستلام ←</button>
+      <p class="lvp-msg" aria-live="polite"></p>
+    </form>
+  </div>
+  {% if wan != blank and wan != '0' %}<a class="lvp-custom" target="_blank" rel="noopener" href="https://wa.me/{{wan}}?text={{'سلام، نحب هدية مخصصة من LAVÉA. نحتاج تنسيق خاص لهذا المنتج: '|append:product.title|url_encode}}"><strong>🎁 عندك فكرة مختلفة؟ صناعة هدية مخصصة</strong><span>WhatsApp ↗</span></a>{% endif %}
+  <div class="lvp-details"><h2>تفاصيل المنتج</h2>{{product.description}}</div>
+</section>
+<style>
+#lvp-{{section.id}}{--i:#2e221e;--m:#746963;--l:#e9ddd5;--a:#73332b;max-width:1180px;margin:0 auto;padding:18px;color:var(--i);font-family:inherit}.lvp-wrap{display:grid;grid-template-columns:1.05fr .95fr;gap:34px;align-items:start}.lvp-mainimg{aspect-ratio:1/1.05;border-radius:24px;overflow:hidden;background:#f7eee8}.lvp-mainimg img{width:100%;height:100%;object-fit:cover}.lvp-thumbs{display:flex;gap:8px;margin-top:9px;overflow:auto}.lvp-thumbs img{width:68px;height:68px;object-fit:cover;border-radius:10px;border:1px solid var(--l)}.lvp-k{font-size:11px;letter-spacing:.14em;color:#8b6b60;font-weight:900}.lvp-info h1{font:700 clamp(34px,4vw,52px)/1.1 Georgia,serif;margin:12px 0}.lvp-price{font-size:25px;font-weight:900;color:#914f48;margin:10px 0}.lvp-desc{color:var(--m);line-height:1.85}.lvp-cart{display:grid;gap:11px;margin-top:18px}.lvp-cart label,.lvp-grid label{display:grid;gap:6px}.lvp-input{min-height:50px;border:1px solid #ddd2ca;border-radius:13px;background:#fff;padding:10px 13px;font:inherit;box-sizing:border-box}.lvp-qty{max-width:120px}.lvp-cart-btn,.lvp-cod-btn{min-height:54px;border:0;border-radius:14px;background:var(--a);color:#fff;font:inherit;font-weight:900;cursor:pointer}.lvp-cart-btn:disabled{opacity:.5}.lvp-wa{display:flex;justify-content:center;margin-top:11px;padding:13px;border-radius:14px;background:#f1eee8;color:#3b5c40;text-decoration:none;font-weight:900}.lvp-cod-box{margin:55px 0 0;padding:26px;border:1px solid var(--l);border-radius:26px;background:#fff;box-shadow:0 16px 45px rgba(77,45,31,.07)}.lvp-cod-head{text-align:center;margin-bottom:18px}.lvp-cod-head span{display:inline-block;background:#f5e9df;color:#7d5046;padding:7px 12px;border-radius:999px;font-size:12px;font-weight:800}.lvp-cod-head h2{font-size:34px;margin:10px 0 5px}.lvp-cod-head p{color:var(--m);margin:0}.lvp-grid{display:grid;grid-template-columns:1fr 1fr;gap:13px}.lvp-grid .full{grid-column:1/-1}.lvp-total{display:flex;justify-content:space-between;background:#faf5f1;border-radius:14px;padding:13px;margin:14px 0;font-weight:900}.lvp-total b{color:#914f48}.lvp-msg{text-align:center;min-height:20px;color:var(--m);font-size:13px}.lvp-custom{margin-top:14px;padding:16px;border:1px solid #dfcbbd;border-radius:16px;background:linear-gradient(135deg,#fff8f2,#f4e7de);display:flex;justify-content:space-between;gap:15px;text-decoration:none;color:var(--i)}.lvp-custom span{font-weight:900}.lvp-details{border-top:1px solid var(--l);margin-top:55px;padding-top:30px;line-height:1.9}.lvp-details img{max-width:100%;height:auto}.lvp-details h2{font:700 32px Georgia,serif}@media(max-width:760px){#lvp-{{section.id}}{padding:10px 12px}.lvp-wrap{grid-template-columns:1fr;gap:22px}.lvp-grid{grid-template-columns:1fr}.lvp-grid .full{grid-column:auto}.lvp-cod-box{margin-top:32px;padding:15px;border-radius:20px}.lvp-cod-head h2{font-size:28px}.lvp-custom{display:block}.lvp-custom span{display:block;margin-top:5px}}
+</style>
+<script>
+(()=>{const r=document.getElementById('lvp-{{section.id}}'),f=r?.querySelector('#LVPCOD-{{section.id}}');if(!r||!f)return;const w=r.querySelector('.js-w'),c=r.querySelector('.js-c'),msg=r.querySelector('.lvp-msg'),btn=r.querySelector('.lvp-cod-btn');let communes=[];const ok=s=>{s=(s||'').replace(/[\s-]/g,'');return /^0[567]\d{8}$/.test(s)||/^\+213[567]\d{8}$/.test(s)};Promise.all([fetch(r.dataset.wilayas).then(x=>x.json()),fetch(r.dataset.communes).then(x=>x.json())]).then(([ws,cs])=>{communes=cs||[];(ws||[]).slice(0,58).forEach(x=>{const o=document.createElement('option');o.value=x.nameAr||x.name;o.dataset.code=x.code;o.textContent=(x.code+' — '+(x.nameAr||x.name));w.appendChild(o)})}).catch(()=>msg.textContent='تعذر تحميل الولايات، حدّث الصفحة من فضلك.');w.addEventListener('change',()=>{const code=w.options[w.selectedIndex]?.dataset.code;c.innerHTML='<option value="">اختر البلدية</option>';c.disabled=!code;if(code)communes.filter(x=>String(x.wilayaCode)===String(code)).forEach(x=>{const o=document.createElement('option');o.value=x.nameAr;o.textContent=x.nameAr;c.appendChild(o)})});f.addEventListener('submit',async e=>{e.preventDefault();const fd=new FormData(f),name=fd.get('name')?.trim(),ph=fd.get('phone')?.trim();if(!name||name.length<4)return msg.textContent='أدخل الاسم واللقب كاملين.';if(!ok(ph))return msg.textContent='رقم الهاتف غير صالح.';if(!w.value||!c.value)return msg.textContent='اختر الولاية والبلدية.';btn.disabled=true;btn.textContent='جاري تجهيز الطلب...';try{await fetch('/cart/clear.js',{method:'POST'});const add=new FormData();add.append('id',fd.get('id'));add.append('quantity','1');add.append('properties[الاسم واللقب]',name);add.append('properties[رقم الهاتف]',ph);add.append('properties[الولاية]',w.value);add.append('properties[البلدية]',c.value);add.append('properties[التغليف]',fd.get('wrap'));add.append('properties[ملاحظة]',fd.get('note')||'');add.append('properties[طريقة الدفع]','الدفع عند الاستلام');const x=await fetch('/cart/add.js',{method:'POST',headers:{Accept:'application/json'},body:add});if(!x.ok)throw 0;window.location.href='/checkout'}catch(_){btn.disabled=false;btn.textContent='تأكيد الطلب • الدفع عند الاستلام ←';msg.textContent='حدث خطأ، حاول مرة أخرى.'}})})();
+</script>
+{% schema %}{"name":"LAVÉA — صفحة المنتج","settings":[{"type":"text","id":"whatsapp_number","label":"رقم WhatsApp بصيغة دولية"}],"presets":[{"name":"LAVÉA Product Page"}]}{% endschema %}
