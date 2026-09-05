@@ -1,0 +1,70 @@
+{% liquid
+  assign wa = section.settings.whatsapp_number | default: ''
+  assign wan = wa | remove: '+' | remove: ' ' | remove: '-' | remove: '(' | remove: ')' 
+%}
+<section id="lavea-cod-{{ section.id }}" class="lavea-cod" dir="rtl" data-communes-url="https://cdn.jsdelivr.net/gh/DZBuild-com/dzship@main/data/communes.json" data-wa="{{ wan | escape }}">
+  <div class="lavea-cod__head">
+    <span class="lavea-badge">الدفع عند الاستلام</span>
+    <h2>اطلب هذا المنتج الآن</h2>
+    <p>املأ المعلومات وسنتواصل معك لتأكيد الطلب قبل الشحن.</p>
+  </div>
+
+  {% form 'product', product, id: 'LaveaCODForm-' | append: section.id, class: 'lavea-cod__form' %}
+    <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+    <div class="lavea-cod__grid">
+      {% unless product.has_only_default_variant %}
+        <label class="lavea-field"><span>اختيار المنتج/اللون</span>
+          <select class="lavea-input js-variant">
+            {% for variant in product.variants %}
+              <option value="{{ variant.id }}" {% if variant.id == product.selected_or_first_available_variant.id %}selected{% endif %} {% unless variant.available %}disabled{% endunless %}>
+                {{ variant.title }}{% unless variant.available %} — غير متوفر{% endunless %}
+              </option>
+            {% endfor %}
+          </select>
+        </label>
+      {% endunless %}
+
+      <label class="lavea-field"><span>الاسم واللقب</span><input class="lavea-input" name="properties[الاسم واللقب]" autocomplete="name" required placeholder="مثال: محمد بن علي"></label>
+      <label class="lavea-field"><span>رقم الهاتف</span><input class="lavea-input js-phone" name="properties[رقم الهاتف]" inputmode="tel" autocomplete="tel" required placeholder="05 / 06 / 07 xx xx xx xx"></label>
+
+      <label class="lavea-field"><span>الولاية</span>
+        <select class="lavea-input js-wilaya" name="properties[الولاية]" required>
+          <option value="">اختر الولاية</option>
+          <option value="أدرار" data-code="1">أدرار</option><option value="الشلف" data-code="2">الشلف</option><option value="الأغواط" data-code="3">الأغواط</option><option value="أم البواقي" data-code="4">أم البواقي</option><option value="باتنة" data-code="5">باتنة</option><option value="بجاية" data-code="6">بجاية</option><option value="بسكرة" data-code="7">بسكرة</option><option value="بشار" data-code="8">بشار</option><option value="البليدة" data-code="9">البليدة</option><option value="البويرة" data-code="10">البويرة</option><option value="تمنراست" data-code="11">تمنراست</option><option value="تبسة" data-code="12">تبسة</option><option value="تلمسان" data-code="13">تلمسان</option><option value="تيارت" data-code="14">تيارت</option><option value="تيزي وزو" data-code="15">تيزي وزو</option><option value="الجزائر" data-code="16">الجزائر</option><option value="الجلفة" data-code="17">الجلفة</option><option value="جيجل" data-code="18">جيجل</option><option value="سطيف" data-code="19">سطيف</option><option value="سعيدة" data-code="20">سعيدة</option><option value="سكيكدة" data-code="21">سكيكدة</option><option value="سيدي بلعباس" data-code="22">سيدي بلعباس</option><option value="عنابة" data-code="23">عنابة</option><option value="قالمة" data-code="24">قالمة</option><option value="قسنطينة" data-code="25">قسنطينة</option><option value="المدية" data-code="26">المدية</option><option value="مستغانم" data-code="27">مستغانم</option><option value="المسيلة" data-code="28">المسيلة</option><option value="معسكر" data-code="29">معسكر</option><option value="ورقلة" data-code="30">ورقلة</option><option value="وهران" data-code="31">وهران</option><option value="البيض" data-code="32">البيض</option><option value="إليزي" data-code="33">إليزي</option><option value="برج بوعريريج" data-code="34">برج بوعريريج</option><option value="بومرداس" data-code="35">بومرداس</option><option value="الطارف" data-code="36">الطارف</option><option value="تندوف" data-code="37">تندوف</option><option value="تيسمسيلت" data-code="38">تيسمسيلت</option><option value="الوادي" data-code="39">الوادي</option><option value="خنشلة" data-code="40">خنشلة</option><option value="سوق أهراس" data-code="41">سوق أهراس</option><option value="تيبازة" data-code="42">تيبازة</option><option value="ميلة" data-code="43">ميلة</option><option value="عين الدفلى" data-code="44">عين الدفلى</option><option value="النعامة" data-code="45">النعامة</option><option value="عين تموشنت" data-code="46">عين تموشنت</option><option value="غرداية" data-code="47">غرداية</option><option value="غليزان" data-code="48">غليزان</option><option value="تيميمون" data-code="49">تيميمون</option><option value="برج باجي مختار" data-code="50">برج باجي مختار</option><option value="أولاد جلال" data-code="51">أولاد جلال</option><option value="بني عباس" data-code="52">بني عباس</option><option value="عين صالح" data-code="53">عين صالح</option><option value="عين قزام" data-code="54">عين قزام</option><option value="تقرت" data-code="55">تقرت</option><option value="جانت" data-code="56">جانت</option><option value="المغير" data-code="57">المغير</option><option value="المنيعة" data-code="58">المنيعة</option>
+        </select>
+      </label>
+
+      <label class="lavea-field"><span>البلدية</span>
+        <select class="lavea-input js-commune" name="properties[البلدية]" required disabled>
+          <option value="">اختر الولاية أولا</option>
+        </select>
+      </label>
+
+      <label class="lavea-field"><span>التغليف</span>
+        <select class="lavea-input" name="properties[التغليف]"><option value="بدون تغليف">بدون تغليف</option><option value="تغليف هدية بسيط">تغليف هدية بسيط</option></select>
+      </label>
+
+      <label class="lavea-field lavea-field--full"><span>ملاحظة</span><textarea class="lavea-input" name="properties[ملاحظة]" rows="4" placeholder="مثال: يرجى الاتصال قبل التوصيل..."></textarea></label>
+    </div>
+
+    <div class="lavea-cod__summary"><div><strong>{{ product.title }}</strong><span>{{ product.selected_or_first_available_variant.price | money }}</span></div><small>التوصيل متاح حسب شبكة التوصيل في 58 ولاية.</small></div>
+    <button type="submit" class="lavea-cod__submit"><span>تأكيد الطلب — الدفع عند الاستلام</span><span aria-hidden="true">←</span></button>
+    <p class="lavea-cod__status" role="status" aria-live="polite"></p>
+  {% endform %}
+
+  {% if wan != blank %}
+    <a class="lavea-custom-gift" href="https://wa.me/{{ wan }}?text={{ 'سلام، نحب نصنع هدية مخصصة من LAVÉA. نحب نعرف الخيارات والأسعار.' | url_encode }}" target="_blank" rel="noopener"><span>🎁</span><span><strong>صناعة هدية مخصصة</strong><small>اختيارات خاصة وتنسيق هدية عبر WhatsApp</small></span><span>↗</span></a>
+  {% endif %}
+</section>
+
+<style>
+#lavea-cod-{{ section.id }}{max-width:1040px;margin:40px auto;padding:0 20px}#lavea-cod-{{ section.id }} .lavea-cod__head{text-align:center;margin-bottom:22px}#lavea-cod-{{ section.id }} .lavea-badge{display:inline-flex;padding:7px 12px;border-radius:999px;background:#f4e9df;color:#7a4f40;font-size:12px;font-weight:700}#lavea-cod-{{ section.id }} h2{margin:11px 0 7px;font-size:34px;letter-spacing:-.02em}#lavea-cod-{{ section.id }} .lavea-cod__head p{margin:0;color:#716963}#lavea-cod-{{ section.id }} .lavea-cod__form{background:#fff;border:1px solid #eadfd7;border-radius:28px;padding:24px;box-shadow:0 18px 48px rgba(70,42,28,.08)}#lavea-cod-{{ section.id }} .lavea-cod__grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}#lavea-cod-{{ section.id }} .lavea-field{display:grid;gap:7px}#lavea-cod-{{ section.id }} .lavea-field--full{grid-column:1/-1}#lavea-cod-{{ section.id }} .lavea-field>span{font-size:13px;font-weight:800;color:#4c3a31}#lavea-cod-{{ section.id }} .lavea-input{width:100%;min-height:50px;padding:12px 14px;border:1px solid #ded2ca;border-radius:14px;background:#fff;font:inherit;box-sizing:border-box;transition:.2s}#lavea-cod-{{ section.id }} .lavea-input:focus{outline:none;border-color:#b36d65;box-shadow:0 0 0 4px rgba(179,109,101,.10)}#lavea-cod-{{ section.id }} textarea.lavea-input{resize:vertical}#lavea-cod-{{ section.id }} .lavea-cod__summary{margin:18px 0;padding:15px 16px;border-radius:16px;background:#faf6f2;display:grid;gap:5px}#lavea-cod-{{ section.id }} .lavea-cod__summary>div{display:flex;justify-content:space-between;gap:15px;align-items:center}#lavea-cod-{{ section.id }} .lavea-cod__summary span{font-weight:900;color:#8e514d}#lavea-cod-{{ section.id }} .lavea-cod__summary small{color:#766e68}#lavea-cod-{{ section.id }} .lavea-cod__submit{width:100%;min-height:54px;border:0;border-radius:16px;background:#6f2e26;color:#fff;font:inherit;font-weight:900;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:12px}#lavea-cod-{{ section.id }} .lavea-cod__submit:disabled{opacity:.6;cursor:wait}#lavea-cod-{{ section.id }} .lavea-cod__status{text-align:center;min-height:20px;margin:10px 0 0;color:#6c625d;font-size:13px}#lavea-cod-{{ section.id }} .lavea-custom-gift{margin-top:14px;padding:15px 16px;border:1px solid #ddc7b7;background:linear-gradient(135deg,#fff8f2,#f6ece4);border-radius:18px;display:flex;align-items:center;gap:12px;text-decoration:none;color:#3b2a23}#lavea-cod-{{ section.id }} .lavea-custom-gift>span:first-child{font-size:24px}#lavea-cod-{{ section.id }} .lavea-custom-gift strong{display:block}#lavea-cod-{{ section.id }} .lavea-custom-gift small{display:block;color:#776d67;margin-top:2px}#lavea-cod-{{ section.id }} .lavea-custom-gift>span:last-child{margin-inline-start:auto;font-weight:900}@media(max-width:749px){#lavea-cod-{{ section.id }}{margin:25px auto;padding:0 14px}#lavea-cod-{{ section.id }} h2{font-size:27px}#lavea-cod-{{ section.id }} .lavea-cod__form{padding:16px;border-radius:22px}#lavea-cod-{{ section.id }} .lavea-cod__grid{grid-template-columns:1fr;gap:12px}#lavea-cod-{{ section.id }} .lavea-field--full{grid-column:auto}#lavea-cod-{{ section.id }} .lavea-input{min-height:52px;border-radius:13px}}
+</style>
+
+<script>
+(function(){const root=document.getElementById('lavea-cod-{{ section.id }}');if(!root)return;const form=root.querySelector('form'),variant=root.querySelector('.js-variant'),hidden=root.querySelector('input[name="id"]'),wilaya=root.querySelector('.js-wilaya'),commune=root.querySelector('.js-commune'),phone=root.querySelector('.js-phone'),submit=root.querySelector('.lavea-cod__submit'),status=root.querySelector('.lavea-cod__status');let communes=[];const normalize=s=>(s||'').trim().replace(/\s+/g,' '),validPhone=s=>{s=(s||'').replace(/[\s-]/g,'');return /^0[567]\d{8}$/.test(s)||/^\+213[567]\d{8}$/.test(s)};fetch(root.dataset.communesUrl).then(r=>r.ok?r.json():Promise.reject()).then(data=>{communes=data||[]}).catch(()=>{status.textContent='تعذر تحميل البلديات حاليا. حاول تحديث الصفحة.'});wilaya?.addEventListener('change',function(){const code=this.options[this.selectedIndex]?.dataset.code;commune.innerHTML='<option value="">اختر البلدية</option>';commune.disabled=!code;if(code){communes.filter(x=>String(x.wilayaCode)===String(code)).forEach(x=>{const o=document.createElement('option');o.value=x.nameAr;o.textContent=x.nameAr;commune.appendChild(o)})}});variant?.addEventListener('change',()=>hidden.value=variant.value);form.addEventListener('submit',async function(e){e.preventDefault();status.textContent='';const name=normalize(form.querySelector('[name="properties[الاسم واللقب]"]').value),ph=normalize(phone?.value),w=wilaya?.value,c=commune?.value;if(name.length<4){status.textContent='يرجى إدخال الاسم واللقب كاملين.';return}if(!validPhone(ph)){status.textContent='رقم الهاتف غير صالح.';return}if(!w||!c){status.textContent='يرجى اختيار الولاية والبلدية.';return}submit.disabled=true;submit.querySelector('span').textContent='جاري تجهيز الطلب...';try{await fetch('/cart/clear.js',{method:'POST'});const fd=new FormData(form);fd.set('id',hidden.value);fd.set('quantity','1');fd.append('properties[طريقة الدفع]','الدفع عند الاستلام');fd.append('properties[المنتج]','{{ product.title | escape }}');const res=await fetch('/cart/add.js',{method:'POST',headers:{Accept:'application/json'},body:fd});if(!res.ok)throw new Error('cart');await fetch('/cart/update.js',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({attributes:{'الاسم واللقب':name,'رقم الهاتف':ph,'الولاية':w,'البلدية':c,'نوع الدفع':'COD','التغليف':form.querySelector('[name="properties[التغليف]"]')?.value||'بدون تغليف'}})});window.location.href='/checkout'}catch(err){submit.disabled=false;submit.querySelector('span').textContent='تأكيد الطلب — الدفع عند الاستلام';status.textContent='وقع مشكل صغير. أعد المحاولة من فضلك.'}})})();
+</script>
+
+{% schema %}
+{"name":"LAVÉA — طلب COD","settings":[{"type":"text","id":"whatsapp_number","label":"رقم WhatsApp بصيغة دولية","default":""}],"presets":[{"name":"LAVÉA — طلب COD"}]}
+{% endschema %}
